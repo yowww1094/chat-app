@@ -58,14 +58,14 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({username});
         if (!user) {
             return res.json({
-                message: "Invalide Credentials!",
+                message: "Incorrect username or password!",
                 status: false
             });
         }
         const passwordMatching = await bcrypt.compare(password, user.password);
         if(!passwordMatching){
             return res.json({
-                message: "Invalide Credentials!",
+                message: "Incorrect username or password!",
                 status: false
             });
         }
@@ -88,4 +88,32 @@ const loginUser = async (req, res) => {
     }
 };
 
-export {registerUser, loginUser};
+const setAvatar = async (req, res) => {
+    const {id} = req.params.id;
+    const {image} = req.body;
+    try {
+        const user = await User.findById(id);
+        if(!user) {
+            return res.json({
+                message: "User does not exist!",
+                status: false
+            })
+        }
+        const updatedUser = await User.findByIdAndUpdate(id, {
+            isAvatarImageSet: true,
+            avatarImage: image
+        })
+        return res.json({
+            isSet: updatedUser.isAvatarImageSet,
+            image: updatedUser.image
+        })
+    } catch (error) {
+        return res.json({
+            message: "Server Error",
+            error: error,
+            status: false
+        });
+    }
+}
+
+export {registerUser, loginUser, setAvatar};
