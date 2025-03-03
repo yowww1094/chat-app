@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import styled from 'styled-components'
 import {ToastContainer, toast} from 'react-toastify'
@@ -24,6 +24,11 @@ function Login() {
     password: ""
   })
 
+  useEffect(()=>{
+    if(localStorage.getItem('chat-app-user'))
+      navigate('/')
+  }, [])
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(handleValidation()){
@@ -46,19 +51,11 @@ function Login() {
     const {username, password} = values;
         
         if(username === ''){
-          toast.error("Username Should not be empty!", toastOptions)
-          return false
-        }else
-        if(username.length<5){
-          toast.error("Username Should be 5 Characters and more!", toastOptions)
+          toast.error("Username is required!", toastOptions)
           return false
         }else
         if(password === ''){
-          toast.error("Password Should not be empty!", toastOptions)
-          return false
-        }else 
-        if(password.length<8){
-          toast.error("Password Should be 8 Characters and more!", toastOptions)
+          toast.error("Password is required!", toastOptions)
           return false
         } else return true
   }
