@@ -116,4 +116,22 @@ const setAvatar = async (req, res) => {
     }
 }
 
-export {registerUser, loginUser, setAvatar};
+const getAllUsers = async (req, res) => {
+    const {id} = req.params;
+    try {
+        const users = await User.findAll({ _id: { $ne: id } }).select([
+            "username", "email", "avatarImage", "_id"
+        ]);
+        return res.json({
+            users,
+        })
+    } catch (error) {
+        return res.json({
+            message: "Server Error",
+            error: error,
+            status: false
+        });
+    }
+};
+
+export {registerUser, loginUser, setAvatar, getAllUsers};

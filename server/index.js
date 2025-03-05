@@ -4,7 +4,8 @@ import 'dotenv/config';
 
 import mongodbConnect from './config/mongodbConnect.js';
 
-import userRoutes from './Routes/userRoutes.js';
+import authRoutes from './Routes/authRoutes.js';
+import userRoutes from './Routes/authRoutes.js';
 
 const PORT = process.env.PORT || 3033;
 
@@ -17,7 +18,8 @@ app.get('/', (req, res)=>{
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', userRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api', userRoutes);
 
 mongodbConnect;
 
