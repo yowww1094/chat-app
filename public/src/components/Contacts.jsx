@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 
-import Logo from '../assets/Logo.svg'
+import Logo from '../assets/logo.svg'
 import { FaPowerOff } from "react-icons/fa6";
 
 

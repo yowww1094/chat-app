@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {useFetcher, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {toast, ToastContainer} from 'react-toastify'
 import axios from 'axios'
 import styled from 'styled-components'
@@ -7,7 +7,7 @@ import { Buffer } from 'buffer'
 
 import { setAvatarRoute } from '../utils/APIRoutes'
 
-import 'react-toastify/dist/ReactToqstify.css'
+import 'react-toastify/dist/ReactToastify.css'
 import loader from '../assets/loader.gif'
 
 const toastOptions = {
@@ -18,31 +18,31 @@ const toastOptions = {
   theme: "dark"
 } 
 
-function setAvatar() {
+function SetAvatar() {
   const navigate = useNavigate()
-  const api = "https://api.multiavatar.com/45678945"
+  const api = "https://api.multiavatar.com/699695"
 
   const [avatars, setAvatars] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedAvatar, setSelectedAvatar] = useState(undefined)
 
-  useEffect( async ()=>{
-    const data = []
-    if(localStorage.getItem('chat-app-user')){
-      navigate('/')
-      return
+  useEffect(()=>{
+    const fetch = async () => {
+      const data = []
+      if(!localStorage.getItem('chat-app-user')){
+        navigate('/login')
+      }
+      for(let i=0; i<4; i++){
+        const image = await axios.get(`${api}/${Math.round(Math.random()*1000)}`)
+        
+        const buffer = new Buffer(image.data)
+        data.push(buffer.toString('base64'))
+      }
+      setAvatars(data)
+      setIsLoading(false)
     }
-    for(let i=0; i<4; i++){
-      const image = await axios.get(`${api}/${Math.round(Math.random()*1000)}`)
-
-      const buffer = new Buffer(image.data)
-      data.push(buffer.toString('base64'))
-    }
-    setAvatars(data)
-    setIsLoading(false)
-
+    fetch()
   }, [])
-
 
   const setProfilePicture = async () => {
     if(selectedAvatar === undefined){
@@ -59,7 +59,7 @@ function setAvatar() {
         localStorage.setItem('chat-app-user', JSON.stringify(user))
         navigate('/')
       } else {
-        toast.error("Error Setting Avatar, Please selecte again!", toastOptions)
+        toast.error("Error Setting Avatar, Please select again!", toastOptions)
       }
     }
   }
@@ -68,20 +68,20 @@ function setAvatar() {
     <>
     {
       isLoading ? 
-      <Container>
-        <img src={loader} alt="loader" className='loader' />
-      </Container> 
+        <Container>
+          <img src={loader} alt="loader" className='loader' />
+        </Container> 
       : (
         <Container>
           <div className="title">
             <h1>Pick an avatar as your profile picture</h1>
           </div>
-          <div className="avtars">{
+          <div className="avatars">{
             avatars.map((avatar, index)=>{
               return(
                 <div key={index} className={`avatar ${selectedAvatar === index ? 'selected' : ''}`}>
-                    <img src={`data:image/svg+xml;based64, ${avatar}`} alt="avatar" onClick={()=>setSelectedAvatar(index)} />
-                  </div>
+                  <img src={`data:image/svg+xml;based64, ${avatar}`} alt="avatar" onClick={()=>setSelectedAvatar(index)} />
+                </div>
                 )
               })
           }</div>
@@ -146,5 +146,4 @@ const Container = styled.div`
     }
   }
 `
-
-export default setAvatar
+export default SetAvatar
