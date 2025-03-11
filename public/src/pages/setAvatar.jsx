@@ -3,7 +3,8 @@ import {useNavigate} from 'react-router-dom'
 import {toast, ToastContainer} from 'react-toastify'
 import axios from 'axios'
 import styled from 'styled-components'
-import { Buffer } from 'buffer'
+// import { Buffer } from 'buffer'
+import multiAvatar from '@multiavatar/multiavatar'
 
 import { setAvatarRoute } from '../utils/APIRoutes'
 
@@ -20,7 +21,7 @@ const toastOptions = {
 
 function SetAvatar() {
   const navigate = useNavigate()
-  const api = "https://api.multiavatar.com/699695"
+  //const api = "https://api.multiavatar.com/699695"
 
   const [avatars, setAvatars] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -33,10 +34,12 @@ function SetAvatar() {
         navigate('/login')
       }
       for(let i=0; i<4; i++){
-        const image = await axios.get(`${api}/${Math.round(Math.random()*1000)}`)
+        //const image = await axios.get(`${api}/${Math.round(Math.random()*1000)}`)
+        const image = multiAvatar(Math.round(Math.random()*1000))
+
         
-        const buffer = new Buffer(image.data)
-        data.push(buffer.toString('base64'))
+        //const buffer = new Buffer(image)
+        data.push(image)
       }
       setAvatars(data)
       setIsLoading(false)
@@ -80,7 +83,8 @@ function SetAvatar() {
             avatars.map((avatar, index)=>{
               return(
                 <div key={index} className={`avatar ${selectedAvatar === index ? 'selected' : ''}`}>
-                  <img src={`data:image/svg+xml;based64, ${avatar}`} alt="avatar" onClick={()=>setSelectedAvatar(index)} />
+                  {/* <img src={`data:image/svg+xml;based64, ${avatar}`} alt="avatar" onClick={()=>setSelectedAvatar(index)} /> */}
+                  {avatar}
                 </div>
                 )
               })
@@ -121,7 +125,7 @@ const Container = styled.div`
       justify-content: center;
       align-items: center;
       transition: 0.5s ease-in-out;
-      img {
+      svg {
         height: 6rem;
       }
     }
